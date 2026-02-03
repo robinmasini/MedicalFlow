@@ -9,6 +9,7 @@ import Summary from './pages/Summary';
 
 
 function App() {
+  console.log('App function executing');
   return (
     <AuthProvider>
       <BrowserRouter>

@@ -24,7 +24,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const demoPractitioner: Practitioner = {
     id: '1',
     name: 'Dr. Renaud DESOUCHES',
-    email: 'praticien@desouches.com',
+    email: 'dr.renaud.desouches@gmail.com',
     rpps: '10101234567',
     profession: 'Chirurgien-Dentiste',
     specialty: 'Orthodontie',
@@ -42,7 +42,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const login = async (email: string, password: string): Promise<boolean> => {
         // Simulated authentication - in production, this would call an API
-        if (email === 'praticien@desouches.com' && password === '1234') {
+        const validEmail = 'dr.renaud.desouches@gmail.com';
+        const validPassword = 'Emeline2011!';
+        const legacyEmail = 'praticien@desouches.com';
+        const legacyPassword = '1234';
+
+        if ((email === validEmail && password === validPassword) ||
+            (email === legacyEmail && password === legacyPassword)) {
             setIsAuthenticated(true);
             setUser(demoPractitioner);
             localStorage.setItem('medicalflow_auth', 'true');
