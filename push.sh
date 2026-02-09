@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script simplifié de Push GitHub pour MedicalFlow
-cd /Users/robinmasini/Desktop/Medical.ia
+cd "$(dirname "$0")"
 
 echo "🧹 Nettoyage..."
 rm -f .git/index.lock
@@ -18,7 +18,7 @@ echo "💾 Création du commit..."
 git commit -m "Initial commit - MedicalFlow"
 
 echo "📤 Push vers GitHub (vous devrez entrer votre token)..."
-git push -u origin master
+git push -u origin main
 
 echo ""
 echo "✅ Terminé ! Vérifiez https://github.com/robinmasini/MedicalFlow"

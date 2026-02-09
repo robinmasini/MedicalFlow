@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script de débogage et push Git - MedicalFlow
-cd /Users/robinmasini/Desktop/Medical.ia
+cd "$(dirname "$0")"
 
 echo "🔧 Diagnostic et réparation Git..."
 echo ""
@@ -50,7 +50,7 @@ if [ $? -eq 0 ]; then
     echo "7️⃣ Push vers GitHub..."
     echo "⚠️  Vous allez devoir entrer votre token GitHub comme mot de passe"
     echo ""
-    git push -u origin master
+    git push -u origin main
     
     if [ $? -eq 0 ]; then
         echo ""

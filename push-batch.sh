@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Approche GitHub Desktop alternative - créer un bundle
-cd /Users/robinmasini/Desktop/Medical.ia
+cd "$(dirname "$0")"
 
 echo "🧹 Nettoyage complet..."
 rm -rf .git/index* .git/COMMIT_EDITMSG 2>/dev/null
@@ -32,7 +32,7 @@ if [ $? -eq 0 ]; then
     echo "✅ Commit réussi!"
     echo ""
     echo "📤 Push vers GitHub..."
-    git push -u origin master
+    git push -u origin main
     
     if [ $? -eq 0 ]; then
         echo ""
