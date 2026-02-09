@@ -10,7 +10,7 @@ interface PatientFormProps {
 const PatientForm = ({ onClose, onSuccess }: PatientFormProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    
+
     const [formData, setFormData] = useState<Patient>({
         civilite: '',
         nom: '',
@@ -19,7 +19,7 @@ const PatientForm = ({ onClose, onSuccess }: PatientFormProps) => {
         sexe: '',
         date_naissance: '',
         type_patient: 'Enfant',
-        praticien: 'Dr DESOUCHES Renaud',
+        praticien: 'Cabinet Médical',
         telephone: '',
         portable: '',
         email: '',
@@ -161,7 +161,7 @@ const PatientForm = ({ onClose, onSuccess }: PatientFormProps) => {
                                 <div className="form-group">
                                     <label>Praticien *</label>
                                     <select name="praticien" value={formData.praticien} onChange={handleChange}>
-                                        <option value="Dr DESOUCHES Renaud">Dr DESOUCHES Renaud</option>
+                                        <option value="Cabinet Médical">Cabinet Médical</option>
                                     </select>
                                 </div>
                                 <div className="form-group checkbox-group">

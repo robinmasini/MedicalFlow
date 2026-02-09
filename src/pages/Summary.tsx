@@ -13,30 +13,13 @@ const Summary = () => {
     const navigate = useNavigate();
     const state = location.state as LocationState | null;
 
-    // Generate a random appointment for demo
-    const generateAppointment = () => {
-        const today = new Date();
-        const appointmentDate = new Date(today);
-        appointmentDate.setDate(appointmentDate.getDate() + Math.floor(Math.random() * 5) + 1);
-
-        const hours = [9, 10, 11, 14, 15, 16];
-        const randomHour = hours[Math.floor(Math.random() * hours.length)];
-        appointmentDate.setHours(randomHour, 0, 0, 0);
-
-        return {
-            date: appointmentDate.toLocaleDateString('fr-FR', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            }),
-            time: `${randomHour}h00`,
-            type: 'Consultation dentaire',
-            doctor: 'Dr. Martin',
-        };
+    // Placeholder for appointment info until system is linked
+    const appointment = {
+        date: 'À confirmer',
+        time: '--:--',
+        type: 'Consultation',
+        doctor: 'Le cabinet',
     };
-
-    const appointment = generateAppointment();
 
     // Extract summary from conversation
     const extractSummary = () => {
@@ -115,8 +98,8 @@ Généré par MedicalFlow
                     <div className="success-banner">
                         <div className="success-icon">✅</div>
                         <div className="success-text">
-                            <h2>Rendez-vous confirmé !</h2>
-                            <p>Un email de confirmation vous sera envoyé</p>
+                            <h2>Demande de rendez-vous reçue !</h2>
+                            <p>Le secrétariat vous contactera pour confirmer le créneau</p>
                         </div>
                     </div>
 

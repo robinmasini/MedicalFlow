@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Logo from '../components/Logo';
+import { EmptyState } from '../components/EmptyState';
 import Patients from './Patients';
 import Planning from './Planning';
 import Calls from './Calls';
 import FollowUps from './FollowUps';
+import { getUpcomingAppointments, Appointment } from '../services/appointmentService';
 import avatarDesouches from '../assets/avatar-desouches.png';
 import './Dashboard.css';
 
@@ -15,6 +17,23 @@ const Dashboard = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [aiInput, setAiInput] = useState('');
     const [activeMenu, setActiveMenu] = useState('dashboard');
+    const [upcomingAppointments, setUpcomingAppointments] = useState<Appointment[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            setIsLoading(true);
+            try {
+                const appointments = await getUpcomingAppointments(5);
+                setUpcomingAppointments(appointments);
+            } catch (error) {
+                console.error("Failed to fetch appointments:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchDashboardData();
+    }, []);
 
     const handleLogout = () => {
         logout();
@@ -37,11 +56,6 @@ const Dashboard = () => {
         day: 'numeric'
     });
 
-    const upcomingAppointments = [
-        { id: 1, time: '09:00', patient: 'Sophie Dubois', type: 'Contrôle annuel' },
-        { id: 2, time: '10:30', patient: 'Marc Laurent', type: 'Détartrage' },
-        { id: 3, time: '14:00', patient: 'Emma Petit', type: 'Pose appareil' },
-    ];
 
     return (
         <div className="dashboard-page">
@@ -127,7 +141,13 @@ const Dashboard = () => {
                 {/* Practitioner Card */}
                 <div className="sidebar-practitioner">
                     <div className="practitioner-avatar">
-                        <img src={avatarDesouches} alt={user?.name || 'Praticien'} />
+                        {user?.photo && user.name !== 'Docteur' ? (
+                            <img src={user.photo} alt={user.name} />
+                        ) : (
+                            <div className="avatar-placeholder">
+                                {user?.name?.[0] || 'D'}
+                            </div>
+                        )}
                     </div>
                     <div className="practitioner-info">
                         <h4>{user?.name || 'Dr. Praticien'}</h4>
@@ -220,70 +240,51 @@ const Dashboard = () => {
                     <div className="dashboard-content stats-view">
                         <div className="stats-header">
                             <h2>Bonjour Cabinet {user?.name || 'MedicalFlow'}</h2>
-                            <div className="stats-filters">
-                                <select defaultValue="30">
-                                    <option value="30">30 derniers jours</option>
-                                </select>
-                            </div>
                         </div>
 
-                        <div className="stats-grid">
-                            <div className="stats-main-card">
-                                <div className="card-top">
-                                    <h3>Statistiques globales (30 jours)</h3>
-                                    <div className="legend">
-                                        <span className="dot hours-in"></span> Appels - heures ouvrées
-                                        <span className="dot hours-off"></span> Appels - Heures non ouvrées
-                                        <span className="dot duration"></span> Durée (min)
+                        {upcomingAppointments.length === 0 && !isLoading ? (
+                            <EmptyState
+                                title="Bienvenue dans votre cabinet"
+                                message="Vous n'avez pas encore de données réelles. Commencez par créer votre premier patient pour activer toutes les fonctionnalités."
+                                actionLabel="Créer un patient"
+                                onAction={() => setActiveMenu('patients')}
+                            />
+                        ) : (
+                            <div className="stats-grid">
+                                <div className="stats-main-card">
+                                    <div className="card-top">
+                                        <h3>Statistiques globales (30 jours)</h3>
+                                        <div className="legend">
+                                            <span className="dot hours-in"></span> Appels
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="mock-chart">
-                                    <div className="chart-bar" style={{ height: '60%' }}></div>
-                                    <div className="chart-bar" style={{ height: '40%' }}></div>
-                                    <div className="chart-bar" style={{ height: '80%' }}></div>
-                                    <div className="chart-bar" style={{ height: '50%' }}></div>
-                                    <div className="chart-bar" style={{ height: '90%' }}></div>
-                                    <div className="chart-bar" style={{ height: '30%' }}></div>
-                                    <div className="chart-bar" style={{ height: '70%' }}></div>
-                                </div>
-                            </div>
-
-                            <div className="stats-side-panel">
-                                <div className="forfait-card">
-                                    <h4>Forfait en cours</h4>
-                                    <p className="forfait-period">Période : 06/01/2026 → 06/02/2026</p>
-                                    <div className="forfait-metrics">
-                                        <div className="metric">
-                                            <span className="label">INCLUS</span>
-                                            <span className="value">120 min</span>
-                                        </div>
-                                        <div className="metric">
-                                            <span className="label">UTILISES</span>
-                                            <span className="value used">76 min</span>
-                                        </div>
-                                        <div className="metric">
-                                            <span className="label">EXCÈS</span>
-                                            <span className="value">0 min</span>
-                                        </div>
+                                    <div className="mock-chart">
+                                        <p style={{ color: '#94a3b8', fontSize: '0.875rem', padding: '20px' }}>
+                                            {upcomingAppointments.length === 0 ? "En attente de vos premières données réelles..." : "Statistiques en cours de calcul..."}
+                                        </p>
                                     </div>
                                 </div>
 
-                                <div className="classifications-card">
-                                    <h4>Classifications (30 derniers jours)</h4>
-                                    <div className="pie-chart-placeholder">
-                                        <div className="pie-slice" style={{ background: '#3b82f6', transform: 'rotate(0deg)' }}></div>
-                                        <div className="pie-center"></div>
+                                <div className="stats-side-panel">
+                                    <div className="forfait-card">
+                                        <h4>Forfait en cours</h4>
+                                        <p className="forfait-period">Suivi de consommation réel</p>
+                                        <div className="forfait-metrics">
+                                            <div className="metric">
+                                                <span className="label">UTILISÉ</span>
+                                                <span className="value used">0 min</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
 
-                        {/* Original welcome cards row */}
                         <div className="dashboard-cards-row" style={{ marginTop: '24px' }}>
                             <div className="dashboard-card welcome-card">
                                 <div className="welcome-icon">👋</div>
                                 <div className="welcome-text">
-                                    <h2>Bonjour, {user?.name?.split(' ')[1] || 'Docteur'}</h2>
+                                    <h2>Bonjour, {user?.name || 'Cabinet'}</h2>
                                     <p>Bienvenue sur votre Espace Praticien MedicalFlow</p>
                                 </div>
                             </div>
@@ -296,6 +297,27 @@ const Dashboard = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {upcomingAppointments.length > 0 && (
+                            <div className="dashboard-card appointments-card" style={{ marginTop: '24px' }}>
+                                <div className="card-header">
+                                    <h3>Mes prochains rendez-vous</h3>
+                                </div>
+                                <div className="appointments-list">
+                                    {upcomingAppointments.map((apt) => (
+                                        <div key={apt.id} className="appointment-item">
+                                            <div className="appointment-time">
+                                                {new Date(apt.date).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                                            </div>
+                                            <div className="appointment-details">
+                                                <span className="patient-name">{apt.patient?.prenom} {apt.patient?.nom}</span>
+                                                <span className="appointment-type">{apt.type}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </main>

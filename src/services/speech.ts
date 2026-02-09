@@ -66,7 +66,7 @@ const getFrenchVoice = (): SpeechSynthesisVoice | null => {
     return voices.find(v => v.lang.startsWith('fr')) || null;
 };
 
-export const speechService: SpeechService = {
+const speechService: SpeechService = {
     isSupported: !!SpeechRecognition && !!speechSynthesis,
 
     startListening: (onResult, onError) => {
@@ -176,4 +176,5 @@ if (speechSynthesis) {
     };
 }
 
-export default speechService;
+
+export { speechService };

@@ -27,11 +27,8 @@ interface Appointment {
     praticien: string;
 }
 
-const demoAppointments: Appointment[] = [
-    { id: '1', date: '2025-01-13', heure: '11:00', type: 'Contrôle', commentaire: 'Rendez-vous récupéré', etat: 'terminé', praticien: 'RD' },
-    { id: '2', date: '2025-01-20', heure: '10:30', type: 'Détartrage', commentaire: '', etat: 'planifié', praticien: 'RD' },
-    { id: '3', date: '2025-02-03', heure: '14:00', type: 'Pose appareil', commentaire: 'Arc sur/Arc inf', etat: 'planifié', praticien: 'RD' },
-];
+
+const demoAppointments: Appointment[] = [];
 
 // Calculate age from date of birth
 const calculateAge = (dateNaissance: string): string => {
@@ -39,7 +36,7 @@ const calculateAge = (dateNaissance: string): string => {
     const today = new Date();
     const years = today.getFullYear() - birthDate.getFullYear();
     const months = today.getMonth() - birthDate.getMonth();
-    
+
     if (months < 0) {
         return `${years - 1} ans ${12 + months} mois`;
     }
@@ -58,7 +55,7 @@ const convertToDisplayPatient = (patient: Patient): DisplayPatient => ({
     email: patient.email,
     telephone: patient.portable || patient.telephone,
     allergies: '',
-    praticien: 'RD'
+    praticien: patient.praticien || 'Cabinet'
 });
 
 const Patients = () => {
@@ -84,13 +81,13 @@ const Patients = () => {
         fetchPatients();
     }, []);
 
-    const filteredPatients = patients.filter(p => 
+    const filteredPatients = patients.filter(p =>
         `${p.nom} ${p.prenom}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.numeroDossier.includes(searchQuery)
     );
 
     const getEtatClass = (etat: string) => {
-        switch(etat) {
+        switch (etat) {
             case 'terminé': return 'etat-termine';
             case 'confirmé': return 'etat-confirme';
             case 'annulé': return 'etat-annule';
@@ -144,7 +141,7 @@ const Patients = () => {
                         </div>
                     ) : (
                         filteredPatients.map((patient) => (
-                            <div 
+                            <div
                                 key={patient.id}
                                 className={`patient-item ${selectedPatient?.id === patient.id ? 'active' : ''}`}
                                 onClick={() => setSelectedPatient(patient)}
@@ -214,25 +211,25 @@ const Patients = () => {
 
                     {/* Tabs */}
                     <div className="patient-tabs">
-                        <button 
+                        <button
                             className={`tab ${activeTab === 'diagnostic' ? 'active' : ''}`}
                             onClick={() => setActiveTab('diagnostic')}
                         >
                             DIAGNOSTIC
                         </button>
-                        <button 
+                        <button
                             className={`tab ${activeTab === 'synthese' ? 'active' : ''}`}
                             onClick={() => setActiveTab('synthese')}
                         >
                             SYNTHÈSE
                         </button>
-                        <button 
+                        <button
                             className={`tab ${activeTab === 'rdv' ? 'active' : ''}`}
                             onClick={() => setActiveTab('rdv')}
                         >
                             RDV/SUIVI
                         </button>
-                        <button 
+                        <button
                             className={`tab ${activeTab === 'administratif' ? 'active' : ''}`}
                             onClick={() => setActiveTab('administratif')}
                         >

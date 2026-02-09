@@ -1,44 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getAppointments, Appointment } from '../services/appointmentService';
+import { EmptyState } from '../components/EmptyState';
 import './Planning.css';
 
 type Status = 'suite_impr' | 'activation' | 'a_faire' | 'en_cours' | 'termine' | 'en_attente';
 type Tab = 'cabinet' | 'production';
 
-interface PlanningItem {
-    id: string;
-    patient: string;
+interface PlanningItem extends Appointment {
+    // We'll map Appointment to the planning view
     travail: string;
     etape: Status;
     commentaires: string;
     prochaines: string;
     bib: string;
     facture: boolean;
-    dateEcheance: string;
     praticien: string;
-    type: string;
     imprime: boolean;
 }
-
-// Demo data for Cabinet
-const demoCabinetItems: PlanningItem[] = [
-    { id: '1', patient: 'DE MOUSTIER Mael', travail: 'Pose appareil', etape: 'a_faire', commentaires: 'Attendre production', prochaines: 'janv. 20', bib: 'BAMBILAB', facture: false, dateEcheance: '2026-01-20', praticien: 'RD', type: 'Contrôle', imprime: false },
-    { id: '2', patient: 'DUPUY Mathilde', travail: 'Activation', etape: 'en_cours', commentaires: '', prochaines: 'janv. 22', bib: 'ELEGOO J', facture: false, dateEcheance: '2026-01-22', praticien: 'RD', type: 'Suivi', imprime: true },
-    { id: '3', patient: 'MARTIN Lucas', travail: 'Contrôle final', etape: 'termine', commentaires: 'RAS', prochaines: 'janv. 25', bib: 'BAMBILAB', facture: true, dateEcheance: '2026-01-25', praticien: 'RD', type: 'Contrôle', imprime: true },
-];
-
-// Demo data for Production
-const demoProductionItems: PlanningItem[] = [
-    { id: '1', patient: 'BELCASTRO Gianni', travail: 'Suite à impr', etape: 'suite_impr', commentaires: '8 à 11', prochaines: 'janv. 7', bib: 'BAMBILAB', facture: false, dateEcheance: '2026-01-15', praticien: 'RD', type: '', imprime: false },
-    { id: '2', patient: 'BELCASTRO Theo', travail: 'Suite à impr', etape: 'suite_impr', commentaires: '8 à 11', prochaines: 'janv. 7', bib: '', facture: false, dateEcheance: '2026-01-16', praticien: 'RD', type: '', imprime: false },
-    { id: '3', patient: 'KHEMALA Kawther', travail: 'Suite à impr', etape: 'suite_impr', commentaires: '14 à 16', prochaines: 'janv. 7', bib: '', facture: false, dateEcheance: '2026-01-17', praticien: 'RD', type: '', imprime: false },
-    { id: '4', patient: 'TOURTET Lily', travail: 'Suite à impr', etape: 'suite_impr', commentaires: '8 à 12', prochaines: 'janv. 14', bib: 'ELEGOO J', facture: false, dateEcheance: '2026-01-18', praticien: 'RD', type: 'En cours', imprime: false },
-    { id: '5', patient: 'PETIT Kamil', travail: 'Suite à impr', etape: 'suite_impr', commentaires: '11 à 18', prochaines: 'janv. 7', bib: 'ELEGOO J', facture: false, dateEcheance: '2026-01-19', praticien: 'RD', type: '', imprime: false },
-    { id: '6', patient: "M'NASRI Célila", travail: 'Suite à impr', etape: 'suite_impr', commentaires: '19 à 24', prochaines: 'janv. 7', bib: '', facture: false, dateEcheance: '2026-01-20', praticien: 'RD', type: 'Finition', imprime: false },
-    { id: '7', patient: 'LEVI-VALENSI Alissa', travail: 'Suite à impr', etape: 'a_faire', commentaires: '', prochaines: 'janv. 7', bib: '', facture: false, dateEcheance: '2026-01-21', praticien: 'RD', type: '', imprime: false },
-    { id: '8', patient: 'ACHOTIAN Missio', travail: 'Activation attelle', etape: 'activation', commentaires: '7 à 15', prochaines: 'janv. 22', bib: 'ELEGOO J', facture: false, dateEcheance: '2026-01-22', praticien: 'RD', type: 'A faire', imprime: true },
-    { id: '9', patient: 'MANIER Lucas', travail: 'Suite à impr', etape: 'suite_impr', commentaires: '24 à 210', prochaines: 'janv. 20', bib: '', facture: false, dateEcheance: '2026-01-23', praticien: 'RD', type: '', imprime: false },
-    { id: '10', patient: 'MARC Jacky', travail: 'Suite à impr', etape: 'suite_impr', commentaires: '19 à 24', prochaines: 'janv. 14', bib: 'BAMBILAB', facture: true, dateEcheance: '2026-01-24', praticien: 'RD', type: '21', imprime: true },
-];
 
 const statusConfig: Record<Status, { label: string; color: string; bg: string }> = {
     suite_impr: { label: 'Suite à impr', color: '#fff', bg: '#00c875' },
@@ -52,12 +30,43 @@ const statusConfig: Record<Status, { label: string; color: string; bg: string }>
 const Planning = () => {
     const [activeTab, setActiveTab] = useState<Tab>('cabinet');
     const [searchQuery, setSearchQuery] = useState('');
+    const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const items = activeTab === 'cabinet' ? demoCabinetItems : demoProductionItems;
+    useEffect(() => {
+        const fetchPlanning = async () => {
+            setIsLoading(true);
+            const data = await getAppointments();
+            setAppointments(data);
+            setIsLoading(false);
+        };
+        fetchPlanning();
+    }, []);
 
-    const filteredItems = items.filter(item =>
-        item.patient.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // Filters for Cabinet/Production. For now, since we only have 'type' in DB, 
+    // we'll assume 'type' field might separate them or just show all in both for real test.
+    const filteredItems = appointments.filter(apt => {
+        const matchesSearch = (apt.patient?.nom + ' ' + apt.patient?.prenom).toLowerCase().includes(searchQuery.toLowerCase());
+        // Simple logic for the demo transition: show all real items in both tabs if they exist
+        return matchesSearch;
+    });
+
+    if (appointments.length === 0 && !isLoading) {
+        return (
+            <div className="planning-container">
+                <div className="planning-header">
+                    <div className="planning-title">
+                        <h2>Organisation du Cabinet</h2>
+                    </div>
+                </div>
+                <EmptyState
+                    title="Aucun rendez-vous planifié"
+                    message="Votre planning est vide. Les rendez-vous pris via l'IA ou créés manuellement apparaîtront ici."
+                    icon="📅"
+                />
+            </div>
+        );
+    }
 
     return (
         <div className="planning-container">
@@ -65,7 +74,7 @@ const Planning = () => {
             <div className="planning-header">
                 <div className="planning-title">
                     <h2>Organisation {activeTab === 'cabinet' ? 'Cabinet' : 'Production'}</h2>
-                    <span className="planning-subtitle">▼ JANVIER 2026</span>
+                    <span className="planning-subtitle">▼ {new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }).toUpperCase()}</span>
                 </div>
                 <div className="planning-actions">
                     <button className="btn-add-item">
@@ -107,61 +116,33 @@ const Planning = () => {
                 <table className="planning-table">
                     <thead>
                         <tr>
-                            <th className="col-patient">Élément</th>
+                            <th className="col-patient">Patient</th>
                             <th className="col-travail">Travail à réaliser</th>
                             <th className="col-etape">Étape</th>
                             <th className="col-commentaires">Commentaires</th>
-                            <th className="col-prochaines">Prochaines</th>
-                            <th className="col-bib">Bib</th>
-                            <th className="col-facture">Facturé</th>
                             <th className="col-echeance">Échéance</th>
-                            <th className="col-praticien">Praticien</th>
-                            {activeTab === 'production' && <th className="col-imprime">Imprimé</th>}
+                            <th className="col-facture">Facturé</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredItems.map((item) => (
-                            <tr key={item.id}>
+                        {filteredItems.map((apt) => (
+                            <tr key={apt.id}>
                                 <td className="col-patient">
-                                    <span className="patient-name">{item.patient}</span>
+                                    <span className="patient-name">{apt.patient?.prenom} {apt.patient?.nom}</span>
                                 </td>
-                                <td className="col-travail">{item.travail}</td>
+                                <td className="col-travail">{apt.type}</td>
                                 <td className="col-etape">
-                                    <span
-                                        className="status-badge"
-                                        style={{
-                                            backgroundColor: statusConfig[item.etape].bg,
-                                            color: statusConfig[item.etape].color
-                                        }}
-                                    >
-                                        {statusConfig[item.etape].label}
+                                    <span className="status-badge" style={{ backgroundColor: '#0086c0', color: '#fff' }}>
+                                        {apt.status}
                                     </span>
                                 </td>
-                                <td className="col-commentaires">{item.commentaires || '-'}</td>
-                                <td className="col-prochaines">
-                                    <span className="date-badge">{item.prochaines}</span>
-                                </td>
-                                <td className="col-bib">
-                                    {item.bib && (
-                                        <span className={`bib-badge ${item.bib.toLowerCase().replace(' ', '-')}`}>
-                                            {item.bib}
-                                        </span>
-                                    )}
+                                <td className="col-commentaires">{apt.notes || '-'}</td>
+                                <td className="col-echeance">
+                                    {new Date(apt.date).toLocaleDateString('fr-FR')}
                                 </td>
                                 <td className="col-facture">
-                                    <span className={`facture-badge ${item.facture ? 'oui' : 'non'}`}>
-                                        {item.facture ? '✓' : ''}
-                                    </span>
+                                    <span className="facture-badge non"></span>
                                 </td>
-                                <td className="col-echeance">{item.dateEcheance}</td>
-                                <td className="col-praticien">{item.praticien}</td>
-                                {activeTab === 'production' && (
-                                    <td className="col-imprime">
-                                        <span className={`imprime-badge ${item.imprime ? 'oui' : 'non'}`}>
-                                            {item.imprime ? '✓' : ''}
-                                        </span>
-                                    </td>
-                                )}
                             </tr>
                         ))}
                     </tbody>

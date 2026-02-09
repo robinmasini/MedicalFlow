@@ -1,6 +1,4 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import avatarDesouches from '../assets/avatar-desouches.png';
-
 interface Practitioner {
     id: string;
     name: string;
@@ -23,12 +21,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // Demo practitioner data
 const demoPractitioner: Practitioner = {
     id: '1',
-    name: 'Dr. Renaud DESOUCHES',
-    email: 'dr.renaud.desouches@gmail.com',
-    rpps: '10101234567',
-    profession: 'Chirurgien-Dentiste',
-    specialty: 'Orthodontie',
-    photo: avatarDesouches,
+    name: 'Cabinet Médical',
+    email: 'contact@medicalflow.fr',
+    rpps: '00000000000',
+    profession: 'Pluridisciplinaire',
+    specialty: 'Général',
+    photo: '',
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -40,15 +38,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return saved ? JSON.parse(saved) : null;
     });
 
-    const login = async (email: string, password: string): Promise<boolean> => {
+    const login = async (email: string, _password: string): Promise<boolean> => {
         // Simulated authentication - in production, this would call an API
-        const validEmail = 'dr.renaud.desouches@gmail.com';
-        const validPassword = 'Emeline2011!';
-        const legacyEmail = 'praticien@desouches.com';
-        const legacyPassword = '1234';
-
-        if ((email === validEmail && password === validPassword) ||
-            (email === legacyEmail && password === legacyPassword)) {
+        if (email.includes('@')) {
             setIsAuthenticated(true);
             setUser(demoPractitioner);
             localStorage.setItem('medicalflow_auth', 'true');
