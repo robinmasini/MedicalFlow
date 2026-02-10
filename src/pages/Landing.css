@@ -77,14 +77,14 @@
 }
 
 .btn-warm {
-    background: linear-gradient(135deg, #F093FB 0%, #F5576C 100%);
+    background: linear-gradient(135deg, #667EEA 0%, #9C41FF 100%);
     color: white;
-    box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+    box-shadow: 0 8px 20px rgba(156, 65, 255, 0.3);
 }
 
 .btn-warm:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(245, 87, 108, 0.45);
+    box-shadow: 0 12px 30px rgba(156, 65, 255, 0.45);
 }
 
 .btn-secondary-warm {
@@ -100,7 +100,7 @@
 
 .btn-white {
     background: white;
-    color: #F5576C;
+    color: #9C41FF;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -190,7 +190,7 @@
 }
 
 .text-gradient-warm {
-    background: linear-gradient(135deg, #FFE5F0 0%, #FFFFFF 100%);
+    background: linear-gradient(135deg, #E8ECFF 0%, #FFFFFF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -238,7 +238,7 @@
 /* ===== STORY SECTION - NEW ===== */
 .story-section {
     padding: 100px 0;
-    background: linear-gradient(180deg, #FFFFFF 0%, #FFF5F7 100%);
+    background: linear-gradient(180deg, #FFFFFF 0%, #F5F7FF 100%);
 }
 
 .story-content {
@@ -255,8 +255,8 @@
 .section-badge-warm {
     display: inline-flex;
     padding: 0.5rem 1.25rem;
-    background: linear-gradient(135deg, #FFE5F0 0%, #F5F7FF 100%);
-    color: #F5576C;
+    background: linear-gradient(135deg, #E8ECFF 0%, #F5F7FF 100%);
+    color: #9C41FF;
     border-radius: 100px;
     font-size: 0.85rem;
     font-weight: 700;
@@ -285,7 +285,7 @@
 }
 
 .story-description strong {
-    color: #F5576C;
+    color: #9C41FF;
     font-weight: 700;
 }
 
@@ -300,19 +300,19 @@
     border-radius: 20px;
     text-align: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(245, 87, 108, 0.1);
+    border: 1px solid rgba(156, 65, 255, 0.1);
     transition: all 0.3s ease;
 }
 
 .stat-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(245, 87, 108, 0.15);
+    box-shadow: 0 15px 40px rgba(156, 65, 255, 0.15);
 }
 
 .stat-number {
     font-size: 3rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #F093FB 0%, #F5576C 100%);
+    background: linear-gradient(135deg, #667EEA 0%, #9C41FF 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -355,7 +355,7 @@
 }
 
 .feature-card-warm {
-    background: linear-gradient(135deg, #FFFFFF 0%, #FFF5F7 100%);
+    background: linear-gradient(135deg, #FFFFFF 0%, #F5F7FF 100%);
     padding: 2.5rem;
     border-radius: 24px;
     text-align: center;
@@ -365,9 +365,9 @@
 
 .feature-card-warm:hover {
     background: white;
-    border-color: rgba(245, 87, 108, 0.2);
+    border-color: rgba(156, 65, 255, 0.2);
     transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(245, 87, 108, 0.15);
+    box-shadow: 0 20px 40px rgba(156, 65, 255, 0.15);
 }
 
 .feature-icon {
@@ -391,7 +391,7 @@
 /* ===== DEMO SECTION - WARM ===== */
 .demo-section-warm {
     padding: 100px 0;
-    background: linear-gradient(135deg, #FFF5F7 0%, #F5F7FF 100%);
+    background: linear-gradient(135deg, #F5F7FF 0%, #F5F7FF 100%);
 }
 
 .demo-content {
@@ -433,7 +433,7 @@
     padding: 2.5rem;
     border-radius: 24px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
-    border: 2px solid rgba(245, 87, 108, 0.1);
+    border: 2px solid rgba(156, 65, 255, 0.1);
 }
 
 .testimonial-quote {
@@ -453,13 +453,13 @@
 .author-avatar {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #F093FB 0%, #F5576C 100%);
+    background: linear-gradient(135deg, #667EEA 0%, #9C41FF 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.8rem;
-    box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+    box-shadow: 0 8px 20px rgba(156, 65, 255, 0.3);
 }
 
 .author-name {
@@ -476,7 +476,7 @@
 /* ===== CTA SECTION - WARM ===== */
 .cta-section-warm {
     padding: 100px 0;
-    background: linear-gradient(135deg, #F093FB 0%, #F5576C 100%);
+    background: linear-gradient(135deg, #667EEA 0%, #9C41FF 100%);
     color: white;
     text-align: center;
 }
