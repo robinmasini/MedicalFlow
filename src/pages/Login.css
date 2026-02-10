@@ -202,7 +202,7 @@
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-semibold);
     color: white;
-    background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
+    background: linear-gradient(135deg, var(--neutral-600) 0%, var(--neutral-800) 100%);
     border: none;
     border-radius: var(--radius-lg);
     cursor: pointer;
@@ -364,6 +364,18 @@
 
     .logo-text-large {
         font-size: var(--font-size-2xl);
+    }
+
+    .login-container {
+        gap: var(--space-3);
+    }
+
+    .login-logo {
+        margin-bottom: var(--space-1);
+    }
+
+    .login-header {
+        margin-bottom: var(--space-4);
     }
 
     .login-header h1 {

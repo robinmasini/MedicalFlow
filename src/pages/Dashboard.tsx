@@ -8,6 +8,9 @@ import Planning from './Planning';
 import Calls from './Calls';
 import FollowUps from './FollowUps';
 import { getUpcomingAppointments, Appointment } from '../services/appointmentService';
+import { createInitialState, getNextStep, createMessage } from '../services/conversation';
+import { speechService } from '../services/speech';
+import { ConversationState, Message } from '../types';
 import avatarDesouches from '../assets/avatar-desouches.png';
 import './Dashboard.css';
 
@@ -19,6 +22,8 @@ const Dashboard = () => {
     const [activeMenu, setActiveMenu] = useState('dashboard');
     const [upcomingAppointments, setUpcomingAppointments] = useState<Appointment[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [convState, setConvState] = useState<ConversationState>(createInitialState());
+    const [isListening, setIsListening] = useState(false);
 
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -43,9 +48,56 @@ const Dashboard = () => {
     const handleAISubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (aiInput.trim()) {
-            // Future: Handle AI request
-            console.log('AI Request:', aiInput);
+            const userMessage = createMessage('user', aiInput);
+            const { nextStep, response } = getNextStep(convState.step, aiInput, convState);
+            const assistantMessage = createMessage('assistant', response);
+
+            setConvState(prev => ({
+                ...prev,
+                step: nextStep,
+                messages: [...prev.messages, userMessage, assistantMessage]
+            }));
+
             setAiInput('');
+
+            // Speak response if possible
+            if (speechService.isSupported) {
+                speechService.speak(response);
+            }
+        }
+    };
+
+    const handleVoiceCommand = () => {
+        if (!speechService.isSupported) return;
+
+        if (isListening) {
+            speechService.stopListening();
+            setIsListening(false);
+        } else {
+            speechService.startListening(
+                (text) => {
+                    setAiInput(text);
+                    setIsListening(false);
+                    // Automatically submit voice result
+                    const userMessage = createMessage('user', text);
+                    const { nextStep, response } = getNextStep(convState.step, text, convState);
+                    const assistantMessage = createMessage('assistant', response);
+
+                    setConvState(prev => ({
+                        ...prev,
+                        step: nextStep,
+                        messages: [...prev.messages, userMessage, assistantMessage]
+                    }));
+
+                    setAiInput('');
+                    speechService.speak(response);
+                },
+                (error) => {
+                    console.error('Speech recognition error:', error);
+                    setIsListening(false);
+                }
+            );
+            setIsListening(true);
         }
     };
 
@@ -55,6 +107,20 @@ const Dashboard = () => {
         month: 'long',
         day: 'numeric'
     });
+
+    const isToday = (dateStr: string) => {
+        const d = new Date(dateStr);
+        const today = new Date();
+        return d.getDate() === today.getDate() &&
+            d.getMonth() === today.getMonth() &&
+            d.getFullYear() === today.getFullYear();
+    };
+
+    const stats = {
+        totalUpcoming: upcomingAppointments.length,
+        todayCount: upcomingAppointments.filter(apt => isToday(apt.date)).length,
+        totalMinutes: upcomingAppointments.reduce((acc, apt) => acc + (apt.duration_minutes || 0), 0)
+    };
 
 
     return (
@@ -203,6 +269,14 @@ const Dashboard = () => {
                                 </div>
                             </div>
 
+                            <div className="ai-messages-container">
+                                {convState.messages.map((msg) => (
+                                    <div key={msg.id} className={`message-item message-${msg.role}`}>
+                                        {msg.content}
+                                    </div>
+                                ))}
+                            </div>
+
                             <form className="ai-input-area" onSubmit={handleAISubmit}>
                                 <div className="ai-input-wrapper">
                                     <input
@@ -217,7 +291,12 @@ const Dashboard = () => {
                                                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
                                             </svg>
                                         </button>
-                                        <button type="button" className="ai-action-btn voice-btn-ai" title="Commande vocale">
+                                        <button
+                                            type="button"
+                                            className={`ai-action-btn voice-btn-ai ${isListening ? 'listening' : ''}`}
+                                            title="Commande vocale"
+                                            onClick={handleVoiceCommand}
+                                        >
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                                 <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
                                                 <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
@@ -255,13 +334,30 @@ const Dashboard = () => {
                                     <div className="card-top">
                                         <h3>Statistiques globales (30 jours)</h3>
                                         <div className="legend">
-                                            <span className="dot hours-in"></span> Appels
+                                            <span className="dot hours-in"></span> Rendez-vous
                                         </div>
                                     </div>
                                     <div className="mock-chart">
-                                        <p style={{ color: '#94a3b8', fontSize: '0.875rem', padding: '20px' }}>
-                                            {upcomingAppointments.length === 0 ? "En attente de vos premières données réelles..." : "Statistiques en cours de calcul..."}
-                                        </p>
+                                        {upcomingAppointments.length === 0 ? (
+                                            <p style={{ color: '#94a3b8', fontSize: '0.875rem', padding: '20px' }}>
+                                                En attente de vos premières données réelles...
+                                            </p>
+                                        ) : (
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '40px', width: '100%', padding: '20px' }}>
+                                                <div className="stat-big-number">
+                                                    <span className="label">Aujourd'hui</span>
+                                                    <span className="value">{stats.todayCount}</span>
+                                                </div>
+                                                <div className="stat-big-number">
+                                                    <span className="label">À venir</span>
+                                                    <span className="value">{stats.totalUpcoming}</span>
+                                                </div>
+                                                <div className="stat-big-number">
+                                                    <span className="label">Temps prévu</span>
+                                                    <span className="value">{Math.round(stats.totalMinutes / 60)}h {stats.totalMinutes % 60}m</span>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
@@ -272,7 +368,7 @@ const Dashboard = () => {
                                         <div className="forfait-metrics">
                                             <div className="metric">
                                                 <span className="label">UTILISÉ</span>
-                                                <span className="value used">0 min</span>
+                                                <span className="value used">{stats.totalMinutes} min</span>
                                             </div>
                                         </div>
                                     </div>

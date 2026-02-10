@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Patient, getPatients } from '../services/patientService';
+import { getAppointmentsByPatientId, Appointment as DBAppointment } from '../services/appointmentService';
 import PatientForm from '../components/PatientForm';
 import './Patients.css';
 
@@ -23,12 +24,12 @@ interface Appointment {
     heure: string;
     type: string;
     commentaire: string;
-    etat: 'planifié' | 'confirmé' | 'terminé' | 'annulé';
+    etat: string;
     praticien: string;
 }
 
 
-const demoAppointments: Appointment[] = [];
+// Demo data removed - using real data
 
 // Calculate age from date of birth
 const calculateAge = (dateNaissance: string): string => {
@@ -65,6 +66,8 @@ const Patients = () => {
     const [selectedPatient, setSelectedPatient] = useState<DisplayPatient | null>(null);
     const [activeTab, setActiveTab] = useState<'diagnostic' | 'synthese' | 'rdv' | 'administratif'>('diagnostic');
     const [showForm, setShowForm] = useState(false);
+    const [patientAppointments, setPatientAppointments] = useState<Appointment[]>([]);
+    const [loadingAppointments, setLoadingAppointments] = useState(false);
 
     // Fetch patients from Supabase
     useEffect(() => {
@@ -80,6 +83,35 @@ const Patients = () => {
         };
         fetchPatients();
     }, []);
+
+    // Fetch appointments when selected patient changes
+    useEffect(() => {
+        const fetchPatientAppointments = async () => {
+            if (!selectedPatient) return;
+            setLoadingAppointments(true);
+            try {
+                const data = await getAppointmentsByPatientId(selectedPatient.id);
+                const displayAppointments: Appointment[] = data.map(apt => {
+                    const aptDate = new Date(apt.date);
+                    return {
+                        id: apt.id,
+                        date: aptDate.toLocaleDateString('fr-FR'),
+                        heure: aptDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                        type: apt.type,
+                        commentaire: apt.notes || '',
+                        etat: apt.status,
+                        praticien: selectedPatient.praticien
+                    };
+                });
+                setPatientAppointments(displayAppointments);
+            } catch (error) {
+                console.error("Failed to fetch patient appointments:", error);
+            } finally {
+                setLoadingAppointments(false);
+            }
+        };
+        fetchPatientAppointments();
+    }, [selectedPatient]);
 
     const filteredPatients = patients.filter(p =>
         `${p.nom} ${p.prenom}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -283,16 +315,22 @@ const Patients = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {demoAppointments.map((apt) => (
-                                            <tr key={apt.id}>
-                                                <td>{apt.date}</td>
-                                                <td>{apt.heure}</td>
-                                                <td>{apt.type}</td>
-                                                <td>{apt.commentaire || '-'}</td>
-                                                <td><span className={`etat-badge ${getEtatClass(apt.etat)}`}>{apt.etat}</span></td>
-                                                <td>{apt.praticien}</td>
-                                            </tr>
-                                        ))}
+                                        {loadingAppointments ? (
+                                            <tr><td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>Chargement des rendez-vous...</td></tr>
+                                        ) : patientAppointments.length === 0 ? (
+                                            <tr><td colSpan={6} style={{ textAlign: 'center', padding: '20px' }}>Aucun rendez-vous trouvé</td></tr>
+                                        ) : (
+                                            patientAppointments.map((apt) => (
+                                                <tr key={apt.id}>
+                                                    <td>{apt.date}</td>
+                                                    <td>{apt.heure}</td>
+                                                    <td>{apt.type}</td>
+                                                    <td>{apt.commentaire || '-'}</td>
+                                                    <td><span className={`etat-badge ${getEtatClass(apt.etat)}`}>{apt.etat}</span></td>
+                                                    <td>{apt.praticien}</td>
+                                                </tr>
+                                            ))
+                                        )}
                                     </tbody>
                                 </table>
                             </div>

@@ -57,3 +57,17 @@ export const getUpcomingAppointments = async (limit = 5): Promise<Appointment[]>
     }
     return data || [];
 };
+
+export const getAppointmentsByPatientId = async (patientId: string): Promise<Appointment[]> => {
+    const { data, error } = await supabase
+        .from('appointments')
+        .select('*, patient:patients(nom, prenom)')
+        .eq('patient_id', patientId)
+        .order('date', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching patient appointments:', error);
+        return [];
+    }
+    return data || [];
+};
