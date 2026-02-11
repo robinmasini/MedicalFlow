@@ -24,6 +24,10 @@
 .sidebar-header {
     padding: var(--space-6);
     border-bottom: 1px solid var(--neutral-100);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .sidebar-logo {
