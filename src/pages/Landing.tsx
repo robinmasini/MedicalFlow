@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import Logo from '../components/Logo';
+import ComingSoonModal from '../components/ComingSoonModal';
 import './Landing.css';
 
 const Landing = () => {
     return (
         <div className="landing">
+            <ComingSoonModal />
             {/* Header */}
             <header className="landing-header">
                 <div className="container">
@@ -25,18 +27,18 @@ const Landing = () => {
             {/* Hero Section with Video Background */}
             <section className="hero">
                 <div className="hero-video-container">
-                    <video 
-                        autoPlay 
-                        loop 
-                        muted 
-                        playsInline 
+                    <video
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
                         className="hero-video"
                     >
                         <source src="/hero-video.mp4" type="video/mp4" />
                     </video>
                     <div className="hero-overlay"></div>
                 </div>
-                
+
                 <div className="container">
                     <div className="hero-content">
                         <div className="hero-badge-warm">💙 Créé avec passion pour les soignants</div>
@@ -45,8 +47,8 @@ const Landing = () => {
                             <span className="text-gradient-warm"> une aide humaine</span>
                         </h1>
                         <p className="hero-subtitle-warm">
-                            MedicalFlow vous libère du temps pour ce qui compte vraiment : 
-                            <strong> prendre soin de vos patients</strong>. 
+                            MedicalFlow vous libère du temps pour ce qui compte vraiment :
+                            <strong> prendre soin de vos patients</strong>.
                             Nous nous occupons de l'administratif, vous gardez l'humain.
                         </p>
                         <div className="hero-cta">
@@ -77,14 +79,14 @@ const Landing = () => {
                             <span className="section-badge-warm">Notre histoire</span>
                             <h2>Parce que chaque minute compte</h2>
                             <p className="story-lead">
-                                Nous avons créé MedicalFlow après avoir vu des médecins passionnés 
-                                perdre des heures précieuses dans des tâches administratives, 
+                                Nous avons créé MedicalFlow après avoir vu des médecins passionnés
+                                perdre des heures précieuses dans des tâches administratives,
                                 loin de leur véritable vocation : soigner.
                             </p>
                             <p className="story-description">
-                                Notre mission est simple : redonner du temps aux soignants. 
+                                Notre mission est simple : redonner du temps aux soignants.
                                 Avec MedicalFlow, l'IA s'occupe de la gestion quotidienne,
-                                pour que vous puissiez vous concentrer sur l'essentiel – 
+                                pour que vous puissiez vous concentrer sur l'essentiel –
                                 <strong> l'attention portée à chaque patient</strong>.
                             </p>
                         </div>
@@ -119,7 +121,7 @@ const Landing = () => {
                             <div className="feature-icon">💬</div>
                             <h3>Conversation naturelle</h3>
                             <p>
-                                Un dialogue chaleureux et empathique avec vos patients. 
+                                Un dialogue chaleureux et empathique avec vos patients.
                                 L'IA comprend leurs besoins et les rassure avec bienveillance.
                             </p>
                         </div>
@@ -127,7 +129,7 @@ const Landing = () => {
                             <div className="feature-icon">🎙️</div>
                             <h3>Assistance vocale</h3>
                             <p>
-                                Vos patients peuvent simplement parler à l'assistant. 
+                                Vos patients peuvent simplement parler à l'assistant.
                                 Plus accessible, plus humain, plus intuitif.
                             </p>
                         </div>
@@ -135,7 +137,7 @@ const Landing = () => {
                             <div className="feature-icon">📅</div>
                             <h3>Gestion intelligente</h3>
                             <p>
-                                Prise de rendez-vous automatique, rappels personnalisés, 
+                                Prise de rendez-vous automatique, rappels personnalisés,
                                 organisation optimale de votre planning.
                             </p>
                         </div>
@@ -143,7 +145,7 @@ const Landing = () => {
                             <div className="feature-icon">📋</div>
                             <h3>Documentation simplifiée</h3>
                             <p>
-                                Fiches patients générées automatiquement, 
+                                Fiches patients générées automatiquement,
                                 synthèses claires, intégration avec vos outils existants.
                             </p>
                         </div>
@@ -174,7 +176,7 @@ const Landing = () => {
                         <div className="demo-visual">
                             <div className="testimonial-card">
                                 <p className="testimonial-quote">
-                                    "MedicalFlow m'a permis de retrouver du temps pour mes patients. 
+                                    "MedicalFlow m'a permis de retrouver du temps pour mes patients.
                                     Je ne me sens plus submergé par l'administratif."
                                 </p>
                                 <div className="testimonial-author">
