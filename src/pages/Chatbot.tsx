@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Message, ConversationState } from '../types';
 import { createMessage, createInitialState, getNextStep, extractPatientInfo } from '../services/conversation';
 import { speechService } from '../services/speech';
+import assistantAvatar from '../assets/assistant-avatar.png';
 import './Chatbot.css';
 
 const Chatbot = () => {
@@ -141,42 +142,33 @@ const Chatbot = () => {
 
     return (
         <div className="chatbot-page">
-            {/* Header */}
+            {/* Header with New Design Title */}
             <header className="chatbot-header">
                 <Link to="/" className="back-link">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M19 12H5M12 19l-7-7 7-7" />
                     </svg>
-                    Retour
                 </Link>
-                <div className="header-title">
-                    <span className="logo-icon">🩺</span>
-                    <span>Medical<span className="logo-accent">Flow</span></span>
+                <div className="expert-title">
+                    <span className="blue-gradient-text">EXPERT ASSISTANT IA</span>
+                    <span className="medical-text"> MEDICAL</span>
+                    <span className="flow-text">FLOW</span>
                 </div>
-                <button
-                    className={`voice-toggle ${voiceEnabled ? 'active' : ''}`}
-                    onClick={toggleVoice}
-                    title={voiceEnabled ? 'Désactiver la voix' : 'Activer la voix'}
-                >
-                    {voiceEnabled ? '🔊' : '🔇'}
-                </button>
+                <div className="header-actions">
+                    <button
+                        className={`voice-toggle ${voiceEnabled ? 'active' : ''}`}
+                        onClick={toggleVoice}
+                    >
+                        {voiceEnabled ? '🔊' : '🔇'}
+                    </button>
+                    <button className="close-btn" onClick={() => navigate('/')}>✕</button>
+                </div>
             </header>
 
             {/* Chat Container */}
             <div className="chat-wrapper">
                 <div className="chat-container">
-                    {/* Avatar Section */}
-                    <div className="avatar-section">
-                        <div className={`avatar ${isSpeaking ? 'avatar-speaking' : ''}`}>
-                            🦷
-                        </div>
-                        <div className="avatar-info">
-                            <h3>Dr. Martin</h3>
-                            <p>Assistant Dentaire IA</p>
-                        </div>
-                    </div>
-
-                    {/* Messages */}
+                    {/* Messages Area - Adjusted for new design */}
                     <div className="chat-messages">
                         {state.messages.map((message: Message) => (
                             <div
@@ -205,49 +197,54 @@ const Chatbot = () => {
                         </div>
                     )}
 
-                    {/* Input Area */}
-                    <form className="chat-input-area" onSubmit={handleSubmit}>
-                        <button
-                            type="button"
-                            className={`voice-btn ${isListening ? 'active' : ''}`}
-                            onClick={handleVoiceInput}
-                            disabled={!speechService.isSupported}
-                            title={speechService.isSupported ? 'Activer le micro' : 'Micro non supporté'}
-                        >
-                            {isListening ? (
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <rect x="6" y="6" width="12" height="12" rx="2" />
+                    {/* New Expert Input Design */}
+                    <div className="expert-input-container">
+                        <div className="input-upper">
+                            <form className="expert-input-wrapper" onSubmit={handleSubmit}>
+                                <div className="expert-avatar-icon">
+                                    <img src={assistantAvatar} alt="AI" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Décrivez vos besoins, prises de RDV, Suivis Patients,..."
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    disabled={isListening}
+                                />
+                                <button type="submit" className="expert-send-btn" disabled={!inputValue.trim() || isTyping}>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                        <path d="M5 12h14M12 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+
+                        <div className="input-lower">
+                            <button className="expert-plus-btn">+</button>
+                            <div className="specialty-selector">
+                                <span className="specialty-icon">🦷</span>
+                                <select defaultValue="orthodontisme">
+                                    <option value="orthodontisme">Orthodontie</option>
+                                    <option value="implantologie">Implantologie</option>
+                                    <option value="chirurgie">Chirurgie</option>
+                                </select>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M7 10l5 5 5-5z" />
                                 </svg>
-                            ) : (
+                            </div>
+                            <button
+                                className={`expert-mic-btn ${isListening ? 'active' : ''}`}
+                                onClick={handleVoiceInput}
+                            >
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                     <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
                                     <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
                                     <line x1="12" y1="19" x2="12" y2="23" />
                                     <line x1="8" y1="23" x2="16" y2="23" />
                                 </svg>
-                            )}
-                        </button>
-
-                        <input
-                            type="text"
-                            className="input chat-input"
-                            placeholder={isListening ? 'Parlez maintenant...' : 'Écrivez votre message...'}
-                            value={inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
-                            disabled={isListening}
-                        />
-
-                        <button
-                            type="submit"
-                            className="btn btn-primary send-btn"
-                            disabled={!inputValue.trim() || isTyping}
-                        >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <line x1="22" y1="2" x2="11" y2="13" />
-                                <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                            </svg>
-                        </button>
-                    </form>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 

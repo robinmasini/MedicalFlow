@@ -63,22 +63,38 @@ const PatientForm = ({ onClose, onSuccess }: PatientFormProps) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        console.log('PatientForm: handleSubmit triggered');
         setError('');
         setIsLoading(true);
 
         if (!formData.nom || !formData.prenom || !formData.date_naissance) {
+            console.warn('PatientForm: Missing required fields');
             setError('Veuillez remplir les champs obligatoires (Nom, Prénom, Date de naissance)');
             setIsLoading(false);
             return;
         }
 
-        const result = await createPatient(formData);
-        setIsLoading(false);
+        try {
+            console.log('PatientForm: Calling createPatient with formData');
+            const { data, error } = await createPatient(formData);
+            console.log('PatientForm: createPatient returned', { data, error });
+            setIsLoading(false);
 
-        if (result) {
-            onSuccess(result);
-        } else {
-            setError('Erreur lors de la création du patient. Vérifiez la console.');
+            if (data) {
+                console.log('PatientForm: Success, calling onSuccess');
+                onSuccess(data);
+            } else {
+                console.error('PatientForm: Error branch hit', error);
+                const errorMessage = error?.message || 'Erreur lors de la création du patient.';
+                const details = error?.details || '';
+                const hint = error?.hint || '';
+                setError(`Erreur: ${errorMessage}${details ? ` (${details})` : ''}${hint ? `. Astuce: ${hint}` : ''}`);
+                console.error('Supabase error:', error);
+            }
+        } catch (err) {
+            console.error('PatientForm: Unexpected catch error:', err);
+            setIsLoading(false);
+            setError(`Une erreur inattendue est survenue: ${err instanceof Error ? err.message : String(err)}`);
         }
     };
 

@@ -49,18 +49,25 @@ export interface Patient {
 }
 
 // Create patient
-export const createPatient = async (patient: Patient): Promise<Patient | null> => {
-    const { data, error } = await supabase
-        .from('patients')
-        .insert([patient])
-        .select()
-        .single();
-    
-    if (error) {
-        console.error('Error creating patient:', error);
-        return null;
+export const createPatient = async (patient: Patient): Promise<{ data: Patient | null; error: any }> => {
+    console.log('patientService: Starting createPatient with data:', patient);
+    try {
+        const { data, error } = await supabase
+            .from('patients')
+            .insert([patient])
+            .select()
+            .single();
+
+        if (error) {
+            console.error('patientService: Supabase error:', error);
+            return { data: null, error };
+        }
+        console.log('patientService: Patient created successfully:', data);
+        return { data, error: null };
+    } catch (err) {
+        console.error('patientService: Unexpected catch error:', err);
+        return { data: null, error: err };
     }
-    return data;
 };
 
 // Get all patients
@@ -69,7 +76,7 @@ export const getPatients = async (): Promise<Patient[]> => {
         .from('patients')
         .select('*')
         .order('created_at', { ascending: false });
-    
+
     if (error) {
         console.error('Error fetching patients:', error);
         return [];
@@ -84,7 +91,7 @@ export const getPatientById = async (id: string): Promise<Patient | null> => {
         .select('*')
         .eq('id', id)
         .single();
-    
+
     if (error) {
         console.error('Error fetching patient:', error);
         return null;
@@ -100,7 +107,7 @@ export const updatePatient = async (id: string, patient: Partial<Patient>): Prom
         .eq('id', id)
         .select()
         .single();
-    
+
     if (error) {
         console.error('Error updating patient:', error);
         return null;
@@ -114,7 +121,7 @@ export const deletePatient = async (id: string): Promise<boolean> => {
         .from('patients')
         .delete()
         .eq('id', id);
-    
+
     if (error) {
         console.error('Error deleting patient:', error);
         return false;
