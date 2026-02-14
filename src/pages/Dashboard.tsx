@@ -12,6 +12,7 @@ import { createInitialState, getNextStep, createMessage } from '../services/conv
 import { speechService } from '../services/speech';
 import { ConversationState, Message } from '../types';
 import avatarDesouches from '../assets/avatar-desouches.png';
+import assistantAvatar from '../assets/assistant-avatar.png';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -258,17 +259,17 @@ const Dashboard = () => {
                 ) : activeMenu === 'relances' ? (
                     <FollowUps />
                 ) : activeMenu === 'ai' ? (
-                    <div className="dashboard-content">
-                        {/* AI Assistant Card - Original AI tab content */}
-                        <div className="dashboard-card ai-card">
-                            <div className="ai-header">
-                                <Logo size="small" variant="white" />
-                                <div className="ai-title">
-                                    <h3>ASSISTANT IA MEDICALFLOW</h3>
-                                    <p>Posez vos questions, dictez vos notes, gérez vos tâches</p>
-                                </div>
+                    <div className="dashboard-content ai-view">
+                        <div className="expert-assistant-header">
+                            <div className="expert-title">
+                                <span className="blue-gradient-text">EXPERT ASSISTANT IA</span>
+                                <span className="medical-text"> MEDICAL</span>
+                                <span className="flow-text">FLOW</span>
                             </div>
+                            <p className="expert-subtitle">Posez vos questions, dictez vos notes, gérez vos tâches</p>
+                        </div>
 
+                        <div className="assistant-messages-wrapper">
                             <div className="ai-messages-container">
                                 {convState.messages.map((msg) => (
                                     <div key={msg.id} className={`message-item message-${msg.role}`}>
@@ -276,43 +277,55 @@ const Dashboard = () => {
                                     </div>
                                 ))}
                             </div>
+                        </div>
 
-                            <form className="ai-input-area" onSubmit={handleAISubmit}>
-                                <div className="ai-input-wrapper">
+                        {/* New Expert Input Design in Dashboard */}
+                        <div className="dashboard-expert-input">
+                            <div className="input-upper">
+                                <form className="expert-input-wrapper" onSubmit={handleAISubmit}>
+                                    <div className="expert-avatar-icon">
+                                        <img src={assistantAvatar} alt="AI" />
+                                    </div>
                                     <input
                                         type="text"
-                                        placeholder="Décrivez vos besoins..."
+                                        placeholder="Décrivez vos besoins, prises de RDV, Suivis Patients,..."
                                         value={aiInput}
                                         onChange={(e) => setAiInput(e.target.value)}
+                                        disabled={isListening}
                                     />
-                                    <div className="ai-input-actions">
-                                        <button type="button" className="ai-action-btn" title="Ajouter un document">
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className={`ai-action-btn voice-btn-ai ${isListening ? 'listening' : ''}`}
-                                            title="Commande vocale"
-                                            onClick={handleVoiceCommand}
-                                        >
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-                                                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                                                <line x1="12" y1="19" x2="12" y2="23" />
-                                                <line x1="8" y1="23" x2="16" y2="23" />
-                                            </svg>
-                                        </button>
-                                    </div>
+                                    <button type="submit" className="expert-send-btn" disabled={!aiInput.trim()}>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                            <path d="M5 12h14M12 5l7 7-7 7" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div className="input-lower">
+                                <button className="expert-plus-btn">+</button>
+                                <div className="specialty-selector">
+                                    <span className="specialty-icon">🦷</span>
+                                    <select defaultValue="orthodontisme">
+                                        <option value="orthodontisme">Orthodontie</option>
+                                        <option value="implantologie">Implantologie</option>
+                                        <option value="chirurgie">Chirurgie</option>
+                                    </select>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M7 10l5 5 5-5z" />
+                                    </svg>
                                 </div>
-                                <button type="submit" className="ai-submit-btn" disabled={!aiInput.trim()}>
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <line x1="22" y1="2" x2="11" y2="13" />
-                                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                                <button
+                                    className={`expert-mic-btn ${isListening ? 'active' : ''}`}
+                                    onClick={handleVoiceCommand}
+                                >
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                                        <line x1="12" y1="19" x2="12" y2="23" />
+                                        <line x1="8" y1="23" x2="16" y2="23" />
                                     </svg>
                                 </button>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 ) : (
