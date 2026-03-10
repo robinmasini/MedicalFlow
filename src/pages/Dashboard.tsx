@@ -336,46 +336,39 @@ const Dashboard = () => {
                             <h2>Bonjour Cabinet {user?.name || 'MedicalFlow'}</h2>
                         </div>
 
-                        {upcomingAppointments.length === 0 && !isLoading ? (
-                            <EmptyState
-                                title="Bienvenue dans votre cabinet"
-                                message="Vous n'avez pas encore de données réelles. Commencez par créer votre premier patient pour activer toutes les fonctionnalités."
-                                actionLabel="Créer un patient"
-                                onAction={() => setActiveMenu('patients')}
-                            />
-                        ) : (
-                            <div className="stats-grid">
-                                <div className="stats-main-card">
-                                    <div className="card-top">
-                                        <h3>Statistiques globales (30 jours)</h3>
-                                        <div className="legend">
-                                            <span className="dot hours-in"></span> Rendez-vous
+                        <div className="dashboard-top-row">
+                            <div className="welcome-banner-container">
+                                <div className="welcome-banner" style={{ backgroundImage: `url(${welcomeBannerImg})` }}>
+                                    <div className="banner-overlay"></div>
+                                    <div className="banner-content">
+                                        <div className="banner-text-side">
+                                            <h1 className="banner-greeting">Bienvenue,</h1>
+                                            <div className="banner-logo-wrapper">
+                                                <img src={casperLogo} alt="Casper Dental" className="banner-casper-logo" />
+                                            </div>
+                                            <div className="banner-subtext">
+                                                <p>Ravi de vous revoir !</p>
+                                                <p>Consultez votre Espace Praticien</p>
+                                            </div>
+                                            <div className="banner-date-section">
+                                                <p className="date-caption">Date d'aujourd'hui</p>
+                                                <p className="date-display">{currentDate}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="mock-chart">
-                                        {upcomingAppointments.length === 0 ? (
-                                            <p style={{ color: '#94a3b8', fontSize: '0.875rem', padding: '20px' }}>
-                                                En attente de vos premières données réelles...
-                                            </p>
-                                        ) : (
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '40px', width: '100%', padding: '20px' }}>
-                                                <div className="stat-big-number">
-                                                    <span className="label">Aujourd'hui</span>
-                                                    <span className="value">{stats.todayCount}</span>
-                                                </div>
-                                                <div className="stat-big-number">
-                                                    <span className="label">À venir</span>
-                                                    <span className="value">{stats.totalUpcoming}</span>
-                                                </div>
-                                                <div className="stat-big-number">
-                                                    <span className="label">Temps prévu</span>
-                                                    <span className="value">{Math.round(stats.totalMinutes / 60)}h {stats.totalMinutes % 60}m</span>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
                                 </div>
+                            </div>
 
+                            {upcomingAppointments.length === 0 && !isLoading ? (
+                                <div className="empty-state-card-wrapper">
+                                    <EmptyState
+                                        title="Bienvenue dans votre cabinet"
+                                        message="Vous n'avez pas encore de données réelles. Commencez par créer votre premier patient pour activer toutes les fonctionnalités."
+                                        actionLabel="Créer un patient"
+                                        onAction={() => setActiveMenu('patients')}
+                                    />
+                                </div>
+                            ) : (
                                 <div className="stats-side-panel">
                                     <div className="forfait-card">
                                         <h4>Forfait en cours</h4>
@@ -388,30 +381,37 @@ const Dashboard = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
 
-                        <div className="welcome-banner-container" style={{ marginTop: '24px' }}>
-                            <div className="welcome-banner" style={{ backgroundImage: `url(${welcomeBannerImg})` }}>
-                                <div className="banner-overlay"></div>
-                                <div className="banner-content">
-                                    <div className="banner-text-side">
-                                        <h1 className="banner-greeting">Bienvenue,</h1>
-                                        <div className="banner-logo-wrapper">
-                                            <img src={casperLogo} alt="Casper Dental" className="banner-casper-logo" />
+                        {upcomingAppointments.length > 0 && (
+                            <div className="stats-grid" style={{ marginTop: '24px' }}>
+                                <div className="stats-main-card">
+                                    <div className="card-top">
+                                        <h3>Statistiques globales (30 jours)</h3>
+                                        <div className="legend">
+                                            <span className="dot hours-in"></span> Rendez-vous
                                         </div>
-                                        <div className="banner-subtext">
-                                            <p>Ravi de vous revoir !</p>
-                                            <p>Consultez votre Espace Praticien</p>
-                                        </div>
-                                        <div className="banner-date-section">
-                                            <p className="date-caption">Date d'aujourd'hui</p>
-                                            <p className="date-display">{currentDate}</p>
+                                    </div>
+                                    <div className="mock-chart">
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '40px', width: '100%', padding: '20px' }}>
+                                            <div className="stat-big-number">
+                                                <span className="label">Aujourd'hui</span>
+                                                <span className="value">{stats.todayCount}</span>
+                                            </div>
+                                            <div className="stat-big-number">
+                                                <span className="label">À venir</span>
+                                                <span className="value">{stats.totalUpcoming}</span>
+                                            </div>
+                                            <div className="stat-big-number">
+                                                <span className="label">Temps prévu</span>
+                                                <span className="value">{Math.round(stats.totalMinutes / 60)}h {stats.totalMinutes % 60}m</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
 
                         {upcomingAppointments.length > 0 && (
                             <div className="dashboard-card appointments-card" style={{ marginTop: '24px' }}>
