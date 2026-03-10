@@ -85,16 +85,41 @@ const PatientForm = ({ onClose, onSuccess }: PatientFormProps) => {
                 onSuccess(data);
             } else {
                 console.error('PatientForm: Error branch hit', error);
-                const errorMessage = error?.message || 'Erreur lors de la création du patient.';
-                const details = error?.details || '';
+
+                // Handle specific Supabase error structure
+                let errorMessage = 'Erreur lors de la création du patient.';
+                let details = '';
+
+                if (error) {
+                    if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
+                        errorMessage = 'Impossible de contacter le serveur (Erreur de connexion).';
+                        details = 'Veuillez vérifier votre connexion internet et la configuration de la base de données.';
+                        if (!window.navigator.onLine) {
+                            details = 'Votre appareil semble hors ligne. Veuillez vous reconnecter à internet.';
+                        }
+                    } else {
+                        errorMessage = error.message || errorMessage;
+                        details = error.details || '';
+                    }
+                }
+
                 const hint = error?.hint || '';
                 setError(`Erreur: ${errorMessage}${details ? ` (${details})` : ''}${hint ? `. Astuce: ${hint}` : ''}`);
-                console.error('Supabase error:', error);
+                console.error('Supabase error details:', error);
             }
         } catch (err) {
             console.error('PatientForm: Unexpected catch error:', err);
             setIsLoading(false);
-            setError(`Une erreur inattendue est survenue: ${err instanceof Error ? err.message : String(err)}`);
+
+            let errorMessage = 'Une erreur inattendue est survenue';
+            let details = err instanceof Error ? err.message : String(err);
+
+            if (details.includes('Failed to fetch')) {
+                errorMessage = 'Erreur de réseau : Impossible de joindre le service.';
+                details = 'Ceci peut être dû à un bloqueur de publicité, un pare-feu, ou une URL de base de données incorrecte.';
+            }
+
+            setError(`${errorMessage}: ${details}`);
         }
     };
 

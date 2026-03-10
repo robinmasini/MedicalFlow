@@ -13,6 +13,8 @@ import { speechService } from '../services/speech';
 import { ConversationState, Message } from '../types';
 import avatarDesouches from '../assets/avatar-desouches.png';
 import assistantAvatar from '../assets/assistant-avatar.png';
+import welcomeBannerImg from '../assets/welcomecard.png';
+import casperLogo from '../assets/casper-logo.png';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -389,20 +391,24 @@ const Dashboard = () => {
                             </div>
                         )}
 
-                        <div className="dashboard-cards-row" style={{ marginTop: '24px' }}>
-                            <div className="dashboard-card welcome-card">
-                                <div className="welcome-icon">👋</div>
-                                <div className="welcome-text">
-                                    <h2>Bonjour, {user?.name || 'Cabinet'}</h2>
-                                    <p>Bienvenue sur votre Espace Praticien MedicalFlow</p>
-                                </div>
-                            </div>
-
-                            <div className="dashboard-card date-card">
-                                <div className="date-icon">📅</div>
-                                <div className="date-text">
-                                    <p className="date-label">Aujourd'hui</p>
-                                    <p className="date-value">{currentDate}</p>
+                        <div className="welcome-banner-container" style={{ marginTop: '24px' }}>
+                            <div className="welcome-banner" style={{ backgroundImage: `url(${welcomeBannerImg})` }}>
+                                <div className="banner-overlay"></div>
+                                <div className="banner-content">
+                                    <div className="banner-text-side">
+                                        <h1 className="banner-greeting">Bienvenue,</h1>
+                                        <div className="banner-logo-wrapper">
+                                            <img src={casperLogo} alt="Casper Dental" className="banner-casper-logo" />
+                                        </div>
+                                        <div className="banner-subtext">
+                                            <p>Ravi de vous revoir !</p>
+                                            <p>Consultez votre Espace Praticien</p>
+                                        </div>
+                                        <div className="banner-date-section">
+                                            <p className="date-caption">Date d'aujourd'hui</p>
+                                            <p className="date-display">{currentDate}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

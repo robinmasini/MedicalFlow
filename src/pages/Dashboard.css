@@ -273,55 +273,136 @@
     box-shadow: var(--shadow-md);
 }
 
-/* Welcome Card */
-.welcome-card {
+/* Welcome Banner */
+.welcome-banner-container {
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+.welcome-banner {
+    position: relative;
+    width: 100%;
+    height: 480px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    padding: 60px 80px;
+    color: white;
 }
 
-.welcome-icon {
-    font-size: 2.5rem;
+.banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.05) 50%, transparent 100%);
+    pointer-events: none;
 }
 
-.welcome-text h2 {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-semibold);
-    color: var(--neutral-900);
-    margin-bottom: var(--space-1);
+.banner-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
 }
 
-.welcome-text p {
-    font-size: var(--font-size-sm);
-    color: var(--neutral-500);
-}
-
-/* Date Card */
-.date-card {
+.banner-text-side {
+    max-width: 500px;
     display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
-    border-color: var(--primary-100);
+    flex-direction: column;
+    gap: 45px;
 }
 
-.date-icon {
-    font-size: 2rem;
+.banner-greeting {
+    font-size: 3rem;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: -0.01em;
+    color: white;
 }
 
-.date-label {
-    font-size: var(--font-size-xs);
-    color: var(--primary-600);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: var(--space-1);
+.banner-logo-wrapper {
+    height: 70px;
+    width: fit-content;
 }
 
-.date-value {
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-medium);
-    color: var(--neutral-800);
-    text-transform: capitalize;
+.banner-casper-logo {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+}
+
+.banner-subtext {
+    font-size: 1.85rem;
+    line-height: 1.25;
+    font-weight: 500;
+    color: white;
+}
+
+.banner-subtext p {
+    margin: 0;
+}
+
+.banner-date-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.date-caption {
+    font-size: 1.2rem;
+    opacity: 1;
+    margin: 0;
+    font-weight: 400;
+}
+
+.date-display {
+    font-size: 2.22rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+@media (max-width: 1200px) {
+    .welcome-banner {
+        height: 400px;
+        padding: 40px 60px;
+    }
+
+    .banner-greeting {
+        font-size: 2.5rem;
+    }
+
+    .banner-subtext {
+        font-size: 1.6rem;
+    }
+
+    .date-display {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome-banner {
+        height: auto;
+        min-height: 400px;
+        padding: 40px 20px;
+        background-position: 65% center;
+    }
+
+    .banner-text-side {
+        max-width: 100%;
+        gap: 30px;
+    }
+
+    .banner-overlay {
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 100%);
+    }
+
+    .date-display {
+        font-size: 1.75rem;
+    }
 }
 
 /* Appointments Card */
@@ -875,6 +956,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 /* ===== EXPERT ASSISTANT REDESIGN (INTEGRATED) ===== */
 .ai-view {
     display: flex;
@@ -942,7 +1024,7 @@
     backdrop-filter: blur(20px);
     border-radius: 2rem;
     padding: 1.5rem;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.5);
     margin-bottom: 1rem;
 }
@@ -1022,7 +1104,7 @@
     background: white;
     padding: 0.5rem 1rem;
     border-radius: 0.75rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     gap: 0.5rem;
     border: 1px solid #f1f5f9;
 }
@@ -1054,9 +1136,20 @@
 }
 
 @keyframes expertPulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.1); opacity: 0.7; }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .expert-plus-btn {

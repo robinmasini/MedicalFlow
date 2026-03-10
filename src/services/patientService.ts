@@ -60,13 +60,22 @@ export const createPatient = async (patient: Patient): Promise<{ data: Patient |
 
         if (error) {
             console.error('patientService: Supabase error:', error);
+            console.error('Error code:', error.code);
+            console.error('Error message:', error.message);
             return { data: null, error };
         }
         console.log('patientService: Patient created successfully:', data);
         return { data, error: null };
     } catch (err) {
         console.error('patientService: Unexpected catch error:', err);
-        return { data: null, error: err };
+        const errorInfo = {
+            message: err instanceof Error ? err.message : String(err),
+            name: err instanceof Error ? err.name : 'UnknownError',
+            stack: err instanceof Error ? err.stack : undefined,
+            navigatorOnline: navigator.onLine
+        };
+        console.error('Error Info:', errorInfo);
+        return { data: null, error: errorInfo };
     }
 };
 
