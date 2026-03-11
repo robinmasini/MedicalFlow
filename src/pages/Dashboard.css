@@ -324,8 +324,8 @@
     background-repeat: no-repeat;
     display: flex;
     align-items: center;
-    padding: 40px 60px;
-    /* Reduced padding */
+    padding: 25px 60px;
+    /* Reduced vertical padding from 40px to 25px */
     color: white;
 }
 
@@ -346,7 +346,8 @@
     max-width: 500px;
     display: flex;
     flex-direction: column;
-    gap: 45px;
+    gap: 15px;
+    /* Reduced from 45px to prevent overflow */
 }
 
 .banner-greeting {
@@ -385,7 +386,8 @@
 .banner-date-section {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 4px;
+    /* Reduced from 12px for compactness */
 }
 
 .date-caption {
