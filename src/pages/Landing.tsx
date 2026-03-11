@@ -1,12 +1,10 @@
 import { Link } from 'react-router-dom';
 import Logo from '../components/Logo';
-import ComingSoonModal from '../components/ComingSoonModal';
 import './Landing.css';
 
 const Landing = () => {
     return (
         <div className="landing">
-            <ComingSoonModal />
             {/* Header */}
             <header className="landing-header">
                 <div className="container">

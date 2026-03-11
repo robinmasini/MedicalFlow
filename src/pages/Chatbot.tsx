@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Message, ConversationState } from '../types';
 import { createMessage, createInitialState, getNextStep, extractPatientInfo } from '../services/conversation';
 import { speechService } from '../services/speech';
+import { createPatient, Patient as DBPatient } from '../services/patientService';
+import { createAppointment } from '../services/appointmentService';
 import assistantAvatar from '../assets/assistant-avatar.png';
 import './Chatbot.css';
 
@@ -70,9 +72,42 @@ const Chatbot = () => {
 
             setIsTyping(false);
 
-            // Navigate to summary if completed
+            // Save to database and navigate to summary if completed
             if (nextStep === 'summary' || nextStep === 'completed') {
-                setTimeout(() => {
+                const performFinalSave = async () => {
+                    let finalPatientId = '';
+
+                    // 1. Create Patient
+                    const patientToCreate: DBPatient = {
+                        nom: updatedPatient.lastName || 'NC',
+                        prenom: updatedPatient.firstName || 'Anonyme',
+                        civilite: 'M/Mme',
+                        sexe: 'NC',
+                        date_naissance: new Date().toISOString().split('T')[0], // Placeholder
+                        type_patient: 'Adulte',
+                        praticien: 'MedicalFlow AI',
+                        portable: updatedPatient.phone,
+                        suivi_exclusif: false
+                    };
+
+                    const { data: savedPatient } = await createPatient(patientToCreate);
+                    if (savedPatient?.id) {
+                        finalPatientId = savedPatient.id;
+                    }
+
+                    // 2. Create Appointment if we have a patient ID
+                    if (finalPatientId) {
+                        await createAppointment({
+                            patient_id: finalPatientId,
+                            date: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
+                            duration_minutes: 30,
+                            type: 'Consultation Chatbot',
+                            status: 'planifié',
+                            notes: `Motif identifié par l'IA: ${updatedMessages.filter(m => m.role === 'user').map(m => m.content).join(' ')}`
+                        });
+                    }
+
+                    // 3. Navigate
                     navigate('/summary', {
                         state: {
                             patient: updatedPatient,
@@ -80,7 +115,9 @@ const Chatbot = () => {
                             messages: [...updatedMessages, assistantMessage],
                         }
                     });
-                }, 3000);
+                };
+
+                performFinalSave();
             }
         }, 1000 + Math.random() * 500);
     };

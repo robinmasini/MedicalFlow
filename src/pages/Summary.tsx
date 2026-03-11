@@ -13,11 +13,11 @@ const Summary = () => {
     const navigate = useNavigate();
     const state = location.state as LocationState | null;
 
-    // Placeholder for appointment info until system is linked
+    // Extract appointment info from state or use placeholders
     const appointment = {
-        date: 'À confirmer',
-        time: '--:--',
-        type: 'Consultation',
+        date: state?.request?.preferredDate || 'À confirmer',
+        time: state?.request?.preferredTime || '--:--',
+        type: state?.request?.requestType === 'urgency' ? 'Urgence' : 'Consultation',
         doctor: 'Le cabinet',
     };
 

@@ -1,6 +1,57 @@
 -- Enable UUID extension if not already enabled
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+-- Table: Patients
+CREATE TABLE IF NOT EXISTS patients (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    civilite TEXT,
+    nom TEXT NOT NULL,
+    prenom TEXT NOT NULL,
+    deuxieme_prenom TEXT,
+    sexe TEXT,
+    date_naissance DATE NOT NULL,
+    type_patient TEXT, -- 'Enfant', 'Adulte'
+    praticien TEXT,
+    telephone TEXT,
+    portable TEXT,
+    email TEXT,
+    suivi_exclusif BOOLEAN DEFAULT FALSE,
+    rpps TEXT,
+    profession TEXT,
+    specialty TEXT,
+    -- Responsable civil
+    responsable_civilite TEXT,
+    responsable_nom TEXT,
+    responsable_prenom TEXT,
+    responsable_num_secu TEXT,
+    responsable_date_naissance DATE,
+    responsable_adresse TEXT,
+    responsable_adresse2 TEXT,
+    responsable_cp TEXT,
+    responsable_commune TEXT,
+    responsable_pays TEXT,
+    responsable_portable1 TEXT,
+    responsable_portable2 TEXT,
+    responsable_telephone1 TEXT,
+    responsable_telephone2 TEXT,
+    responsable_email TEXT,
+    responsable_remarque TEXT,
+    -- Correspondants
+    envoye_par TEXT,
+    dentiste TEXT,
+    -- Famille
+    famille_membre1_prenom TEXT,
+    famille_membre1_sexe TEXT,
+    famille_membre1_date_naissance DATE,
+    famille_membre2_prenom TEXT,
+    famille_membre2_sexe TEXT,
+    famille_membre2_date_naissance DATE,
+    famille_membre3_prenom TEXT,
+    famille_membre3_sexe TEXT,
+    famille_membre3_date_naissance DATE
+);
+
 -- Table: Appointments
 CREATE TABLE IF NOT EXISTS appointments (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
