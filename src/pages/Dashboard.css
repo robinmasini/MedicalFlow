@@ -365,17 +365,30 @@
 }
 
 .banner-logo-wrapper {
-    height: 130px;
-    /* Enlarged as requested */
+    height: 180px;
+    /* Increased size significantly */
     width: fit-content;
     margin-left: -5px;
-    /* Slight alignment tweak */
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.banner-logo-wrapper:hover {
+    transform: scale(1.02);
 }
 
 .banner-casper-logo {
     height: 100%;
     width: auto;
     object-fit: contain;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
+    /* Illumination effect */
+    transition: filter 0.3s ease;
+}
+
+.banner-logo-wrapper:hover .banner-casper-logo {
+    filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.9));
+    /* Boost glow on hover */
 }
 
 .banner-subtext {

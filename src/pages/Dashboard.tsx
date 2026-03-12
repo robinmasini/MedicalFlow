@@ -343,9 +343,9 @@ const Dashboard = () => {
                                     <div className="banner-content">
                                         <div className="banner-text-side">
                                             <h1 className="banner-greeting">Bienvenue,</h1>
-                                            <div className="banner-logo-wrapper">
+                                            <a href="https://casperdental.fr/" target="_blank" rel="noopener noreferrer" className="banner-logo-wrapper">
                                                 <img src={casperLogo} alt="Casper Dental" className="banner-casper-logo" />
-                                            </div>
+                                            </a>
                                             <div className="banner-subtext">
                                                 <p>Ravi de vous revoir !</p>
                                                 <p>Consultez votre Espace Praticien</p>
