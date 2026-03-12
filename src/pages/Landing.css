@@ -501,6 +501,26 @@
     flex-wrap: wrap;
 }
 
+/* ===== CALENDLY SECTION ===== */
+.calendly-section {
+    padding: 100px 0;
+    background: white;
+}
+
+.calendly-wrapper {
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(156, 65, 255, 0.1);
+    margin-top: 3rem;
+    min-height: 700px;
+}
+
+.calendly-iframe {
+    background: transparent;
+}
+
 /* ===== FOOTER ===== */
 .footer {
     background: #2D3748;
