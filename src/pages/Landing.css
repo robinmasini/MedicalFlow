@@ -510,15 +510,17 @@
 
 .calendly-wrapper {
     background: white;
-    border-radius: 24px;
+    border-radius: 12px;
+    /* Smoother corners for the calendar */
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(156, 65, 255, 0.1);
-    margin: 2rem auto 0;
-    max-width: 800px;
-    /* Reduced width */
-    min-height: 500px;
-    /* Reduced height */
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.04);
+    /* More subtle, wider shadow */
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    /* Very faint border */
+    margin: 0 auto;
+    max-width: 900px;
+    /* Slightly wider for better calendar view */
+    min-height: 700px;
 }
 
 .calendly-iframe {

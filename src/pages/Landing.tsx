@@ -72,16 +72,11 @@ const Landing = () => {
             {/* Calendly Section - Moved Up */}
             <section id="demo-calendly" className="calendly-section">
                 <div className="container">
-                    <div className="section-header">
-                        <span className="section-badge-warm">Rendez-vous</span>
-                        <h2>Réservez votre démonstration personnalisée</h2>
-                        <p>Choisissez un créneau pour découvrir MedicalFlow avec l'un de nos experts</p>
-                    </div>
                     <div className="calendly-wrapper">
                         <iframe
                             src="https://calendly.com/medicalflow/demo"
                             width="100%"
-                            height="500"
+                            height="700"
                             frameBorder="0"
                             title="Calendly Scheduling"
                             className="calendly-iframe"
