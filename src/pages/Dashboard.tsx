@@ -338,7 +338,7 @@ const Dashboard = () => {
 
                         <div className="dashboard-top-row">
                             <div className="welcome-banner-container">
-                                <div className="welcome-banner" style={{ backgroundImage: `url(${welcomeBannerImg})` }}>
+                                <div className="welcome-banner" style={{ '--banner-bg': `url(${welcomeBannerImg})` } as React.CSSProperties}>
                                     <div className="banner-overlay"></div>
                                     <div className="banner-content">
                                         <div className="banner-text-side">
