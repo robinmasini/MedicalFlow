@@ -1,8 +1,22 @@
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import Logo from '../components/Logo';
 import './Landing.css';
 
 const Landing = () => {
+    useEffect(() => {
+        // Load Calendly script dynamically
+        const script = document.createElement('script');
+        script.src = "https://assets.calendly.com/assets/external/widget.js";
+        script.async = true;
+        document.body.appendChild(script);
+
+        return () => {
+            // Cleanup script on unmount
+            document.body.removeChild(script);
+        };
+    }, []);
+
     return (
         <div className="landing">
             {/* Header */}
@@ -73,14 +87,11 @@ const Landing = () => {
             <section id="demo-calendly" className="calendly-section">
                 <div className="container">
                     <div className="calendly-wrapper">
-                        <iframe
-                            src="https://calendly.com/medicalflow/demo"
-                            width="100%"
-                            height="700"
-                            frameBorder="0"
-                            title="Calendly Scheduling"
-                            className="calendly-iframe"
-                        ></iframe>
+                        <div
+                            className="calendly-inline-widget"
+                            data-url="https://calendly.com/medicalflow/demo"
+                            style={{ minWidth: '320px', height: '700px' }}
+                        ></div>
                     </div>
                 </div>
             </section>

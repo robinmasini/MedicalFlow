@@ -511,15 +511,13 @@
 .calendly-wrapper {
     background: white;
     border-radius: 12px;
-    /* Smoother corners for the calendar */
     overflow: hidden;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.04);
-    /* More subtle, wider shadow */
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    /* Very faint border */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    /* Extremely subtle shadow */
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    /* Almost invisible border */
     margin: 0 auto;
     max-width: 900px;
-    /* Slightly wider for better calendar view */
     min-height: 700px;
 }
 
