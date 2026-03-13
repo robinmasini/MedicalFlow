@@ -89,7 +89,7 @@ const Landing = () => {
                     <div className="calendly-wrapper">
                         <div
                             className="calendly-inline-widget"
-                            data-url="https://calendly.com/medicalflow/demo"
+                            data-url="https://calendly.com/robin-masini/30min"
                             style={{ minWidth: '320px', height: '700px' }}
                         ></div>
                     </div>
