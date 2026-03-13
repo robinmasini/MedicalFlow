@@ -306,8 +306,8 @@
     justify-content: center;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
     border: 1px solid var(--neutral-100);
-    min-height: 400px;
-    /* Reduced to match new banner height */
+    min-height: 360px;
+    /* Reduced from 400px */
 }
 
 .empty-state-card-wrapper .empty-state {
@@ -318,7 +318,8 @@
 .welcome-banner {
     position: relative;
     width: 100%;
-    min-height: 480px;
+    min-height: 360px;
+    /* Reduced from 480px */
     height: 100%;
     /* Fill entire container height to avoid bottom cut */
     background-size: cover;
@@ -326,7 +327,8 @@
     background-repeat: no-repeat;
     display: flex;
     align-items: center;
-    padding: 40px 60px;
+    padding: 30px 60px;
+    /* Reduced vertical padding from 40px */
     color: white;
     font-family: 'Aeonik', 'Inter', -apple-system, sans-serif;
     /* Priority to Aeonik */
